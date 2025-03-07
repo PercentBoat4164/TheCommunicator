@@ -1,13 +1,24 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.28)
 project(TheCommunicator)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 26)
 
-find_package(PkgConfig)
-pkg_check_modules(GTKMM gtkmm-4.0 REQUIRED)
+set(CPM_SOURCE_CACHE external)
+include(cmake/get_cpm.cmake)
+CPMAddPackage("gh:libsdl-org/SDL#release-3.2.8")
+CPMAddPackage("gh:ocornut/imgui#v1.91.8")
 
-include_directories(${GTKMM_INCLUDE_DIRS})
-link_directories(${GTKMM_LIBRARY_DIRS})
+add_library(ImGUI STATIC
+        ${imgui_SOURCE_DIR}/imgui.cpp
+        ${imgui_SOURCE_DIR}/imgui_draw.cpp
+        ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+        ${imgui_SOURCE_DIR}/imgui_demo.cpp
+        ${imgui_SOURCE_DIR}/imgui_tables.cpp
+        ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl3.cpp
+        ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer3.cpp
+)
+target_include_directories(ImGUI PUBLIC ${imgui_SOURCE_DIR})
+target_link_libraries(ImGUI SDL3::SDL3-shared)
 
 add_executable(TheCommunicator main.cpp)
-target_link_libraries(TheCommunicator ${GTKMM_LIBRARIES})
+target_link_libraries(TheCommunicator ImGUI)
