@@ -20,5 +20,15 @@ add_library(ImGUI STATIC
 target_include_directories(ImGUI PUBLIC ${imgui_SOURCE_DIR})
 target_link_libraries(ImGUI SDL3::SDL3-shared)
 
-add_executable(TheCommunicator main.cpp)
-target_link_libraries(TheCommunicator ImGUI)
+# Add the src directory to the include path
+include_directories(src)
+
+add_executable(TheCommunicator
+        src/main.cpp
+        src/gui/gui.cpp
+        src/backend/messaging.cpp
+        src/backend/video.cpp
+        src/network/client.cpp
+        src/utils/logger.cpp
+)
+target_link_libraries(TheCommunicator ImGUI SDL3::SDL3-shared)
